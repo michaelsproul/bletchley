@@ -89,19 +89,32 @@ def gap_distances(repeats):
 			distances.add(pos[i + 1] - pos[i])
 	return distances
 
-def vigenere(text, key):
+def vigenere(text, key, reverse=False):
 	"Perform a Vigenere cipher on the given text using the key provided."
 	output = ""
 
 	# Calculate the equivalent caesar shift for each letter in the key
 	key = key.lower()
-	shifts = []
-	for l in key:
-		shifts.append(lc_letters.index(l))
+	shifts = [lc_letters.index(l) for l in key]
+	if reverse:
+		shifts = [26 - i for i in shifts]
 
-	# Encipher each letter according the key shifts
+	# Encipher each letter according to the key shifts
 	n = len(key)
 	for i in range(len(text)):
 		output += caesar(text[i], shifts[i % n])
 
 	return output
+
+def all_keys(n):
+	"Generate all keys of length n."
+	keys = [l for l in lc_letters]
+	new_keys = []
+	for i in range(n - 1):
+		for key in keys:
+			for l in lc_letters:
+				new_keys.append(key + l)
+		keys = new_keys
+		new_keys = []
+	
+	return keys
